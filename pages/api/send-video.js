@@ -22,7 +22,7 @@ function getFirstFile(fileOrObject) {
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const token = "7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI";
+  const token = "YOUR_TELEGRAM_BOT_TOKEN";
 
   const form = new IncomingForm();
 
@@ -34,10 +34,10 @@ export default async function handler(req, res) {
 
     const chat_id = fields.chat_id;
     const caption = fields.caption || "";
-    const photoFile = getFirstFile(files.photo);
+    const videoFile = getFirstFile(files.video);
 
-    if (!chat_id || !photoFile) {
-      return res.status(400).json({ error: "chat_id atau photo tidak ditemukan" });
+    if (!chat_id || !videoFile) {
+      return res.status(400).json({ error: "chat_id atau video tidak ditemukan" });
     }
 
     try {
@@ -45,12 +45,12 @@ export default async function handler(req, res) {
       formData.append("chat_id", chat_id);
       formData.append("caption", caption);
       formData.append(
-        "photo",
-        fs.createReadStream(photoFile.filepath),
-        photoFile.originalFilename
+        "video",
+        fs.createReadStream(videoFile.filepath),
+        videoFile.originalFilename
       );
 
-      const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+      const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendVideo`, {
         method: "POST",
         body: formData,
         headers: formData.getHeaders(),
@@ -60,13 +60,13 @@ export default async function handler(req, res) {
 
       if (!data.ok) {
         console.error("Telegram API error:", data);
-        return res.status(500).json({ error: "Gagal kirim foto ke Telegram" });
+        return res.status(500).json({ error: "Gagal kirim video ke Telegram" });
       }
 
       return res.status(200).json(data);
     } catch (error) {
       console.error("Error kirim ke Telegram:", error);
-      return res.status(500).json({ error: "Gagal kirim foto ke Telegram" });
+      return res.status(500).json({ error: "Gagal kirim video ke Telegram" });
     }
   });
 }
