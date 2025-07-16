@@ -2,19 +2,20 @@ import { IncomingForm } from "formidable";
 import fs from "fs";
 import FormData from "form-data";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export const config = { api: { bodyParser: false } };
+
+function getFirstFile(fileOrArray) {
+  if (!fileOrArray) return null;
+  if (Array.isArray(fileOrArray)) return fileOrArray[0];
+  if (typeof fileOrArray === "object" && "filepath" in fileOrArray) return fileOrArray;
+  return null;
+}
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
+  if (req.method !== "POST")
     return res.status(405).json({ error: "Method not allowed" });
-  }
 
   const token = "7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI";
-
   const form = new IncomingForm();
 
   form.parse(req, async (err, fields, files) => {
@@ -25,9 +26,7 @@ export default async function handler(req, res) {
 
     const chat_id = fields.chat_id;
     const caption = fields.caption || "";
-
-    // Cek apakah files.video array atau bukan, ambil yang pertama jika array
-    const videoFile = Array.isArray(files.video) ? files.video[0] : files.video;
+    const videoFile = getFirstFile(files.video);
 
     if (!chat_id || !videoFile) {
       return res.status(400).json({ error: "chat_id atau video tidak ditemukan" });
