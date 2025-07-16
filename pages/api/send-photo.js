@@ -4,6 +4,7 @@ import FormData from "form-data";
 
 export const config = { api: { bodyParser: false } };
 
+// Helper untuk ambil 1 file pertama
 function getFirstFile(fileOrObject) {
   if (!fileOrObject) return null;
   if (Array.isArray(fileOrObject)) return fileOrObject[0];
@@ -23,7 +24,7 @@ export default async function handler(req, res) {
   if (req.method !== "POST")
     return res.status(405).json({ error: "Method not allowed" });
 
-  const token = "7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI"; // ← Ganti token di sini
+  const token = "7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI"; // Ganti dengan token kamu
 
   const form = new IncomingForm();
 
@@ -57,13 +58,15 @@ export default async function handler(req, res) {
         headers: formData.getHeaders(),
       });
 
+      // ⛑️ Baca respon 1x dan parse aman
+      const rawText = await tgRes.text();
       let data;
+
       try {
-        data = await tgRes.json();
+        data = JSON.parse(rawText);
       } catch (e) {
-        const text = await tgRes.text();
-        console.error("❌ Gagal parse JSON dari Telegram:", text);
-        return res.status(500).json({ error: "Telegram response invalid", raw: text });
+        console.error("❌ Respon Telegram bukan JSON:", rawText);
+        return res.status(500).json({ error: "Respon Telegram bukan JSON", raw: rawText });
       }
 
       if (!data.ok) {
