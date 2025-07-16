@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const token = "";
+  const token = "7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI";
 
   try {
     const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
