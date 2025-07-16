@@ -8,11 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
-    "form-data": "^4.0.0",
-    "formidable": "^3.5.3",
-    "next": "13.4.10",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-     "node-fetch": "^3.3.1"
-  }
+  "form-data": "^4.0.0",
+  "formidable": "^3.5.3",
+  "next": "13.4.10",
+  "react": "18.2.0",
+  "react-dom": "18.2.0",
+  "node-fetch": "^3.3.1",
+  "@ffmpeg/ffmpeg": "^0.12.6"
+}
 }
