@@ -25,7 +25,9 @@ export default async function handler(req, res) {
 
     const chat_id = fields.chat_id;
     const caption = fields.caption || "";
-    const videoFile = files.video;
+
+    // Cek apakah files.video array atau bukan, ambil yang pertama jika array
+    const videoFile = Array.isArray(files.video) ? files.video[0] : files.video;
 
     if (!chat_id || !videoFile) {
       return res.status(400).json({ error: "chat_id atau video tidak ditemukan" });
