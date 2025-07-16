@@ -64,7 +64,11 @@ export default async function handler(req, res) {
       try {
         data = JSON.parse(rawText);
       } catch (e) {
-        console.error("❌ Respon Telegram bukan JSON:", rawText);
+       console.error("❌ Respon Telegram bukan JSON:");
+console.error("Status:", tgRes.status);
+console.error("Headers:", Object.fromEntries(tgRes.headers.entries()));
+console.error("Body:", rawText);
+
         return res.status(500).json({ error: "Respon Telegram bukan JSON", raw: rawText });
       }
 
