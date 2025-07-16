@@ -7,7 +7,7 @@ export const config = {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const token = process.env.TG_TOKEN || '7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI';
+  const token = '7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI';
   const url = `https://api.telegram.org/bot${token}/sendDocument`; // lebih aman pakai sendDocument
 
   try {
