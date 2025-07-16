@@ -1,10 +1,10 @@
-import formidable from "formidable";
+import { IncomingForm } from "formidable";
 import fs from "fs";
 import FormData from "form-data";
 
 export const config = {
   api: {
-    bodyParser: false, // matikan body parser Next.js
+    bodyParser: false,
   },
 };
 
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
   const token = "7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI";
 
-  const form = new formidable.IncomingForm();
+  const form = new IncomingForm();
 
   form.parse(req, async (err, fields, files) => {
     if (err) {
