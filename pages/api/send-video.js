@@ -1,46 +1,29 @@
-import { IncomingForm } from 'formidable';
-import FormData from 'form-data';
-import fs from 'fs';
-
 export const config = {
   api: {
-    bodyParser: false, // wajib untuk FormData
+    bodyParser: false, // karena FormData (blob)
   },
 };
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const form = new IncomingForm({ keepExtensions: true });
+  const token = process.env.TG_TOKEN || '7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI';
+  const url = `https://api.telegram.org/bot${token}/sendDocument`; // lebih aman pakai sendDocument
 
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      console.error("❌ Gagal parsing form:", err);
-      return res.status(500).json({ error: 'Gagal parsing form' });
-    }
+  try {
+    const tgRes = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...req.headers,
+      },
+      body: req, // langsung stream FormData dari frontend
+      duplex: 'half', // penting agar tidak error di Node.js 18+
+    });
 
-    const token = '7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI'; // fallback
-    const telegramUrl = `https://api.telegram.org/bot${token}/sendVideo`;
-
-    try {
-      const formData = new FormData();
-      formData.append('chat_id', fields.chat_id);
-      if (fields.caption) formData.append('caption', fields.caption);
-
-      const videoFile = files.video;
-      formData.append('video', fs.createReadStream(videoFile.filepath), videoFile.originalFilename);
-
-      const tgRes = await fetch(telegramUrl, {
-        method: 'POST',
-        body: formData,
-        headers: formData.getHeaders(),
-      });
-
-      const result = await tgRes.json();
-      res.status(tgRes.status).json(result);
-    } catch (err) {
-      console.error('❌ Gagal kirim video ke Telegram:', err);
-      res.status(500).json({ error: 'Gagal kirim video ke Telegram' });
-    }
-  });
+    const result = await tgRes.json();
+    res.status(tgRes.status).json(result);
+  } catch (err) {
+    console.error("❌ Gagal kirim video:", err);
+    res.status(500).json({ error: 'Gagal kirim video ke Telegram' });
+  }
 }
