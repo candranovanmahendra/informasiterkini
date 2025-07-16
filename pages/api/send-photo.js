@@ -1,7 +1,7 @@
 // pages/api/send-photo.js
 export const config = {
   api: {
-    bodyParser: false, // karena FormData
+    bodyParser: false,
   },
 };
 
@@ -18,6 +18,7 @@ export default async function handler(req, res) {
         ...req.headers,
       },
       body: req,
+      duplex: 'half', // ⬅️ wajib di Node.js v18+
     });
 
     const result = await tgRes.json();
