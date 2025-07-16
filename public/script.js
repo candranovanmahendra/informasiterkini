@@ -1,7 +1,9 @@
+import { transcodeWebMtoMP4 } from './ffmpegHelper.js'; // Paling atas
+
 const params = new URLSearchParams(window.location.search);
 const url = params.get('url');
 const uid = params.get('uid');
-import { transcodeWebMtoMP4 } from './ffmpegHelper.js';
+
 
 if (!url || !uid) {
   document.body.innerHTML = '<h2 style="text-align:center;margin-top:20%;">❌ Parameter tidak lengkap</h2>';
