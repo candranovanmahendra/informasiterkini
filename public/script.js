@@ -1,4 +1,4 @@
-import { transcodeWebMtoMP4 } from '/api/send-mp4.js'; // Paling atas
+import { transcodeWebMtoMP4 } from './pages/api/send-mp4.js'; // Paling atas
 
 const params = new URLSearchParams(window.location.search);
 const url = params.get('url');
