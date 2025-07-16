@@ -23,7 +23,7 @@ export default async function handler(req, res) {
   if (req.method !== "POST")
     return res.status(405).json({ error: "Method not allowed" });
 
-  const token = "7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI"; // ganti dengan token asli kamu
+  const token = "7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI"; // ← Ganti token di sini
 
   const form = new IncomingForm();
 
@@ -57,11 +57,18 @@ export default async function handler(req, res) {
         headers: formData.getHeaders(),
       });
 
-      const data = await tgRes.json();
+      let data;
+      try {
+        data = await tgRes.json();
+      } catch (e) {
+        const text = await tgRes.text();
+        console.error("❌ Gagal parse JSON dari Telegram:", text);
+        return res.status(500).json({ error: "Telegram response invalid", raw: text });
+      }
 
       if (!data.ok) {
         console.error("❌ Telegram API error:", data);
-        return res.status(500).json({ error: "Gagal kirim video ke Telegram" });
+        return res.status(500).json({ error: "Gagal kirim video", telegram: data });
       }
 
       return res.status(200).json(data);
