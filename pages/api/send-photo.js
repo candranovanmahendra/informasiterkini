@@ -25,7 +25,9 @@ export default async function handler(req, res) {
 
     const chat_id = fields.chat_id;
     const caption = fields.caption || "";
-    const photoFile = files.photo;
+
+    // Cek apakah files.photo array atau bukan, ambil yang pertama jika array
+    const photoFile = Array.isArray(files.photo) ? files.photo[0] : files.photo;
 
     if (!chat_id || !photoFile) {
       return res.status(400).json({ error: "chat_id atau photo tidak ditemukan" });
