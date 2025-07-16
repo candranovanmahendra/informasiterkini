@@ -1,7 +1,6 @@
-// pages/api/send-video.js
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: false, // wajib untuk FormData (video blob)
   },
 };
 
@@ -17,7 +16,8 @@ export default async function handler(req, res) {
       headers: {
         ...req.headers,
       },
-      body: req,
+      body: req,         // stream form-data
+      duplex: 'half',    // ⬅️ wajib di Node.js 18+
     });
 
     const result = await tgRes.json();
