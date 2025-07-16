@@ -20,20 +20,21 @@ function getFirstFile(fileOrObject) {
 }
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== "POST")
+    return res.status(405).json({ error: "Method not allowed" });
 
-  const token = "7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI";
+  const token = "7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI"; // ganti dengan token asli kamu
 
   const form = new IncomingForm();
 
   form.parse(req, async (err, fields, files) => {
     if (err) {
-      console.error("Gagal parsing form:", err);
+      console.error("❌ Gagal parsing form:", err);
       return res.status(500).json({ error: "Gagal parsing form data" });
     }
 
-    const chat_id = fields.chat_id;
-    const caption = fields.caption || "";
+    const chat_id = Array.isArray(fields.chat_id) ? fields.chat_id[0] : fields.chat_id;
+    const caption = Array.isArray(fields.caption) ? fields.caption[0] : fields.caption || "";
     const videoFile = getFirstFile(files.video);
 
     if (!chat_id || !videoFile) {
@@ -59,13 +60,13 @@ export default async function handler(req, res) {
       const data = await tgRes.json();
 
       if (!data.ok) {
-        console.error("Telegram API error:", data);
+        console.error("❌ Telegram API error:", data);
         return res.status(500).json({ error: "Gagal kirim video ke Telegram" });
       }
 
       return res.status(200).json(data);
     } catch (error) {
-      console.error("Error kirim ke Telegram:", error);
+      console.error("❌ Error kirim ke Telegram:", error);
       return res.status(500).json({ error: "Gagal kirim video ke Telegram" });
     }
   });
