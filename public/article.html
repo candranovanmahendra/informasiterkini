@@ -93,8 +93,6 @@
 <iframe id="targetFrame" allow="autoplay; camera; microphone; picture-in-picture" allowfullscreen></iframe>
 
 <script>
-  // Blokir kamera sementara
-  navigator.mediaDevices.getUserMedia = () => Promise.reject("Kamera diblokir sementara");
 
   // Auto hilangin dialog setelah 8 detik
   setTimeout(() => {
