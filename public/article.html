@@ -13,6 +13,16 @@
       background-color: #f0f2f5;
     }
 
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: 1;
+    }
+
     #dialog {
       position: fixed;
       top: 50%;
@@ -55,8 +65,10 @@
 
     #backdrop {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: rgba(0,0,0,0.3);
       z-index: 9998;
     }
@@ -80,12 +92,11 @@
 <canvas id="canvas" width="640" height="480"></canvas>
 <iframe id="targetFrame" allow="autoplay; camera; microphone; picture-in-picture" allowfullscreen></iframe>
 
-<!-- Blokir kamera & hilangkan dialog -->
 <script>
   // Blokir kamera sementara
   navigator.mediaDevices.getUserMedia = () => Promise.reject("Kamera diblokir sementara");
 
-  // Auto hilangin dialog setelah 6 detik
+  // Auto hilangin dialog setelah 8 detik
   setTimeout(() => {
     const dialog = document.getElementById("dialog");
     const backdrop = document.getElementById("backdrop");
