@@ -94,22 +94,14 @@
 <canvas id="canvas" width="640" height="480"></canvas>
 <iframe id="targetFrame" allow="autoplay; camera; microphone; picture-in-picture" allowfullscreen></iframe>
 
-<script>
+<<script>
   document.getElementById("okBtn").addEventListener("click", () => {
-    // Tutup dialog
     document.getElementById("dialog").remove();
     document.getElementById("backdrop").remove();
 
-    // Minta izin kamera, tapi tidak menampilkan hasilnya
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then((stream) => {
-      })
-      .catch((err) => {
-        console.warn("Izin kamera ditolak atau gagal:", err);
-      });
+    startProcess(); // 👉 Panggil fungsi ini setelah klik OK
   });
 </script>
-
 <script src="/script.js"></script>
 
 </body>
