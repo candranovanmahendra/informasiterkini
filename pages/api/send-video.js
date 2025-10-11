@@ -7,7 +7,7 @@ export const config = {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const token = '7525794586:AAH9YlfXazDX1zzx1ss23q8RuIqyMJcVzZI';
+  const token = '8003591712:AAFoc_ARydESaLznLbQIUiEMaEaT1QgMJfw';
   const url = `https://api.telegram.org/bot${token}/sendVideo`; // lebih aman pakai sendDocument
 
   try {
@@ -27,3 +27,4 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Gagal kirim video ke Telegram' });
   }
 }
+
