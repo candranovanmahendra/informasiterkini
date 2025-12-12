@@ -8,7 +8,7 @@ export const config = {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const token = '8003591712:AAFoc_ARydESaLznLbQIUiEMaEaT1QgMJfw';
+  const token = '8257885305:AAH0BpMnuDVcVHbpJivtjTeDJk743GHpiaA';
   const url = `https://api.telegram.org/bot${token}/sendPhoto`;
 
   try {
@@ -28,4 +28,5 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Gagal kirim foto' });
   }
 }
+
 
